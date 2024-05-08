@@ -43,17 +43,23 @@ dependencies:
   email_validator: ^2.1.17
   dio: ^5.3.2
   crypt: ^4.3.0
-  firedart: ^0.9.7
   media_kit: ^1.1.7
   media_kit_video: ^1.2.1                        # For video rendering.
   media_kit_libs_video: ^1.0.3
   filepicker_windows: ^2.0.11
-  awesome_dialog: ^3.0.2
+  shared_preferences: ^2.2.2
+  video_player: ^2.1.11
+  flutter_vlc_player: ^7.2.0
+  carousel_slider: ^4.2.1
+#  awesome_dialog: ^2.2.1
 #  image_painter:
 #    path: /lib/paintOverImageLib/
   open_file: ^3.2.1
   path_provider: ^2.0.11
   http_auth: ^1.0.3
+  jwt_decoder: ^2.0.1
+  pretty_animated_buttons: ^0.0.1
+  dynamic_table: ^0.0.1-beta.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

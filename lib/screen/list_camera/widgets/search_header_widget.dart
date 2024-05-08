@@ -11,10 +11,10 @@ class SearchHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Danh sách Camera',
+          'Danh sách Camera Live',
           style: SafeGoogleFont(
             'Mulish',
             fontSize: 32,

@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:firedart/firedart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -295,23 +294,7 @@ class _AddCameraState extends State<AddCamera> {
   }
   void addCameratoFirebase(String rtspLink,String httpLink,String nameCamera,String district,String username,String password){
     if(validateNameCamera(nameCamera) & validateCameraIp(rtspLink) & validateDistrict(district) & validateHttpLink(httpLink)){
-      var documentReference = Firestore.instance.collection('cameraIp');
-      Map<String,dynamic> data ={};
-      data["Ipcamera"] = rtspLink;
-      data["httpLink"] = httpLink;
-      data["namecam"] = nameCamera;
-      data["district"]= district;
-      data["point_center_direct"] = [0,0,0,0];
-      data["point_right_direct"] = [0,0,0,0];
-      data["point_left_direct"] = [0,0,0,0];
-      data["point_center_lane"] = [0,0,0,0];
-      data["point_right_lane"] = [0,0,0,0];
-      data["point_left_lane"] = [0,0,0,0];
-      data["point_center_direct"] = [0,0,0,0];
-      data["point_right_direct"] = [0,0,0,0];
-      data["point_rect_lane"] = [0,0,0,0];
       try{
-        documentReference.add(data);
         showSuccessDialog(context, "Thêm camera thành công");
       }catch(e){
         showSuccessDialog(context, "Đã xảy ra lỗi trong quá trình thêm camera. \nVui lòng thử lại");

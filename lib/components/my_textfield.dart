@@ -34,7 +34,7 @@ class MyTextField extends StatelessWidget {
           color: HexColor("#8d8d8d"),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,
         ),
         prefixIcon: prefixIcon,

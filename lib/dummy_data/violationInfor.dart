@@ -1,5 +1,4 @@
 
-import 'package:firedart/generated/google/protobuf/timestamp.pb.dart';
 
 class ViolationInfor{
   String violation;

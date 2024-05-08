@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +5,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:news_app_ui/gen/assets.gen.dart';
 import 'package:news_app_ui/screen/home/widgets/service_box.dart';
 import 'package:news_app_ui/screen/list_camera/widgets/list_camera_widgets.dart';
-import 'package:news_app_ui/screen/list_violation/widgets/list_violation.dart';
 import 'package:news_app_ui/screen/main_tab_bar/main_tab_bar.dart';
 import 'package:news_app_ui/utils/utils.dart';
 
@@ -67,21 +65,21 @@ class Dashboard extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 onTap: (){
-                  AwesomeDialog(
-                    context: context,
-                    animType: AnimType.leftSlide,
-                    headerAnimationLoop: false,
-                    dialogType: DialogType.info,
-                    showCloseIcon: true,
-                    title: 'Thông báo',
-                    desc:
-                    'Tính năng đang phát triển, sẽ giới thiệu đến quý khách trong thời gian tới!',
-                    btnOkOnPress: () {
-                    },
-                    // btnOkIcon: Icons.cancel,
-                    onDismissCallback: (type) {
-                    },
-                  ).show();
+                  // AwesomeDialog(
+                  //   context: context,
+                  //   animType: AnimType.LEFTSLIDE,
+                  //   headerAnimationLoop: false,
+                  //   dialogType: DialogType.INFO,
+                  //   showCloseIcon: true,
+                  //   title: 'Thông báo',
+                  //   desc:
+                  //   'Tính năng đang phát triển, sẽ giới thiệu đến quý khách trong thời gian tới!',
+                  //   btnOkOnPress: () {
+                  //   },
+                  //   // btnOkIcon: Icons.cancel,
+                  //   // onDismissCallback: (type) {
+                  //   // },
+                  // ).show();
                 },
                 child: ServiceBox(
                   title: "Thống kê",
@@ -96,21 +94,21 @@ class Dashboard extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 onTap: (){
-                  AwesomeDialog(
-                    context: context,
-                    animType: AnimType.leftSlide,
-                    headerAnimationLoop: false,
-                    dialogType: DialogType.info,
-                    showCloseIcon: true,
-                    title: 'Thông báo',
-                    desc:
-                    'Tính năng đang phát triển, sẽ giới thiệu đến quý khách trong thời gian tới!',
-                    btnOkOnPress: () {
-                    },
-                    // btnOkIcon: Icons.cancel,
-                    onDismissCallback: (type) {
-                    },
-                  ).show();
+                  // AwesomeDialog(
+                  //   context: context,
+                  //   animType: AnimType.LEFTSLIDE,
+                  //   headerAnimationLoop: false,
+                  //   dialogType: DialogType.INFO,
+                  //   showCloseIcon: true,
+                  //   title: 'Thông báo',
+                  //   desc:
+                  //   'Tính năng đang phát triển, sẽ giới thiệu đến quý khách trong thời gian tới!',
+                  //   btnOkOnPress: () {
+                  //   },
+                  //   // btnOkIcon: Icons.cancel,
+                  //   // onDismissCallback: (type) {
+                  //   // },
+                  // ).show();
                 },
                 child: ServiceBox(
                   title: "Danh sách camera",

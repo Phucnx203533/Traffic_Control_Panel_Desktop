@@ -1,17 +1,18 @@
+import 'dart:collection';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:news_app_ui/api/loginApi.dart';
 import 'package:news_app_ui/dummy_data/user.dart';
 import 'package:news_app_ui/screen/login/widgets//auth_page.dart';
-import 'package:crypt/crypt.dart';
+import 'package:news_app_ui/screen/main_tab_bar/main_tab_bar.dart';
 import 'package:news_app_ui/utils/constants/app_colors.dart';
-import 'package:firedart/firedart.dart';
-import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-const apiKey = 'AIzaSyBB_0XDdanNZda-vryRhwar0RwwDOQ-7Tc';
-const projectId = 'traffic-control-panel-demo';
+
 // const apiKey = 'AIzaSyAGEyO4ZN7gdrvuqY4Vd1SMMCUVmt6UDno';
 // const projectId = 'aaaa-dbb41';
 // const email = 'phuc202@gmail.com';
@@ -22,25 +23,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Necessary initialization for package:media_kit.
   MediaKit.ensureInitialized();
-  try{
-    FirebaseAuth.initialize(apiKey, VolatileStore());
-    Firestore.initialize(projectId); // Firestore reuses the auth client
-    // const email = 'admin@gmail.com';
-    // const password = 'Abc@1234';
-    // var auth = FirebaseAuth.instance;
-    // // Monitor sign-in state
-    // auth.signInState.listen((state) => print("Signed ${state ? "in" : "out"}"));
-    // print(3);
-    // // Sign in with user credentials
-    // await auth.signIn(email, password);
-    // print(4);
-    // // Get user object
-    // var users = await auth.getUser();
-    // print(5);
-    // print(users);
-  }catch(e){
-
-  }
   runApp(const MyApp());
 }
 
@@ -49,18 +31,66 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetMaterialApp getXApp = GetMaterialApp(
-      themeMode: ThemeMode.light,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primaryColor: AppColors.primaryColor
-      ),
-      // home: MainTabBar(),
-      home: AuthPage(),
-      // initialBinding: AppBinding(),
-    );
+    final LoginApi loginApi = new LoginApi();
 
-    return getXApp;
+    Future<bool> checkAccessToken() async {
+      try{
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? accessToken = prefs.getString('accessToken');
+        String? refreshToken = prefs.getString("refreshToken");
+        // print(accessToken.toString());
+        // print(refreshToken);
+        // return true;
+        if(accessToken == null || JwtDecoder.isExpired(refreshToken.toString())){
+          return false;
+        }else{
+          if(JwtDecoder.isExpired(accessToken)){
+            Map<String,String> result = new HashMap();
+            result = await loginApi.refreshToken(refreshToken);
+            result.forEach((key, value) {
+              prefs.setString(key, value);
+            });
+          }
+          return true;
+        }
+      }catch(e){
+        return false;
+      }
+
+    }
+    // GetMaterialApp getXApp = GetMaterialApp(
+    //   themeMode: ThemeMode.light,
+    //   debugShowCheckedModeBanner: false,
+    //   theme: ThemeData(
+    //       primaryColor: AppColors.primaryColor
+    //   ),
+    //   // home: MainTabBar(),
+    //   home:
+    //   AuthPage(),
+    //   // initialBinding: AppBinding(),
+    // );
+    //
+    // return getXApp;
+    return FutureBuilder<bool>(
+      future: checkAccessToken(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Nếu đang chờ dữ liệu, hiển thị màn hình trống
+          return Container();
+        } else {
+          // Nếu đã có dữ liệu, kiểm tra xem có Access Token hay không
+          bool hasAccessToken = snapshot.data!;
+          return GetMaterialApp(
+            themeMode: ThemeMode.light,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(primaryColor: AppColors.primaryColor),
+            home: hasAccessToken ? MainTabBar(0) : AuthPage(),
+            // home:AuthPage(),
+            // initialBinding: AppBinding(),
+          );
+        }
+      },
+    );
 
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_app_ui/screen/details/details_page.dart';
 import 'package:news_app_ui/screen/home/widgets/dashboard_widget.dart';
+import 'package:news_app_ui/screen/home/widgets/list_view_camera.dart';
 import 'package:news_app_ui/utils/constants/app_colors.dart';
 import 'package:news_app_ui/widgets/spacer/spacer_custom.dart';
 
@@ -27,6 +28,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
     return Scaffold(
       backgroundColor: AppColors.backGroundColor,
       body: SingleChildScrollView(
@@ -39,51 +43,12 @@ class _HomePageState extends State<HomePage> {
                 size: 0.04,
               ),
               Dashboard(),
-              // const TopSliderWidget(),
-              // const CustomHeightSpacer(
-              //   size: 0.04,
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text(
-              //       'Danh sách Camera',
-              //       textAlign: TextAlign.start,
-              //       style: SafeGoogleFont(
-              //         'Mulish',
-              //         fontSize: 24,
-              //         fontWeight: FontWeight.w700,
-              //         height: 1.2,
-              //         color: Color(0xff1a434e),
-              //       ),
-              //     ),
-              //     RoundIconButtonWidget(
-              //       iconName: Assets.icons.icSetting5.path,
-              //       iconColor: AppColors.primaryColor,
-              //       iconWidth: 20,
-              //       iconHeight: 20,
-              //       borderColor: AppColors.borderColor,
-              //       onTap: () {},
-              //     ),
-              //   ],
-              // ),
-              // const CustomHeightSpacer(
-              //   size: 0.02,
-              // ),
-              // const  HorizontalCategoryList(
-              //   items: myCategory,
-              // ),
-              //
-              // ListView.builder(
-              //   shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
-              //   itemCount: myDataList.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return  CardViewWidget(image: myDataList[index].image, name: myDataList[index].name, author: myDataList[index].author,onTap: (){
-              //       Get.to(DetailsPage());
-              //     },);
-              //   },
-              // ),
+              Column(
+                children: [
+                  SizedBox(height: 10,),
+                  ListViewCamera(),
+                ],
+              ),
 
             ],
           ),

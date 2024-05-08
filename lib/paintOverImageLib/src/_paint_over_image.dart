@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:news_app_ui/dummy_data/cameraInfo.dart';
+import '../../dummy_data/cameraInfo.dart';
 
 import '_controller.dart';
 import '_image_painter.dart';
@@ -17,7 +17,7 @@ import 'widgets/_range_slider.dart';
 import 'widgets/_text_dialog.dart';
 
 export '_image_painter.dart';
-import 'package:firedart/firedart.dart';
+// import 'package:firedart/firedart.dart';
 
 ///[ImagePainter] widget.
 @immutable
@@ -97,7 +97,7 @@ class ImagePainter extends StatefulWidget {
       textDelegate: textDelegate,
       controlsAtTop: controlsAtTop ?? true,
       showControls: showControls ?? true,
-        cameraInforEntity: cameraInforEntity ?? new CameraInforEntity("", "", "","","")
+        cameraInforEntity: cameraInforEntity ?? CameraInforEntity(" ", " ", " "," "," "," "," ", " ", 0,0,0," ","")
 
     );
   }
@@ -241,7 +241,7 @@ class ImagePainter extends StatefulWidget {
       textDelegate: textDelegate,
       controlsAtTop: controlsAtTop ?? true,
       showControls: showControls ?? true,
-      cameraInforEntity: cameraInforEntity ?? new CameraInforEntity("", "", "","","")
+      cameraInforEntity: cameraInforEntity ?? CameraInforEntity(" ", " ", " "," "," "," "," ", " ", 0,0,0," ","")
     );
   }
 
@@ -378,8 +378,8 @@ class ImagePainterState extends State<ImagePainter> {
 
     _isLoaded = ValueNotifier<bool>(false);
     _controller = Controller();
-    _controller.getPaintFromFirebase(widget.cameraInforEntity);
-    _controller.setIdOnFirebae(widget.cameraInforEntity.idOnFirebase);
+    // _controller.getPaintFromFirebase(widget.cameraInforEntity);
+    // _controller.setIdOnFirebae(widget.cameraInforEntity.idOnFirebase);
     if (widget.isSignature) {
       _controller.update(
         mode: PaintMode.freeStyle,

@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-
-import 'package:firedart/firedart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -289,7 +287,7 @@ class _InformationCameraState extends State<EditInformationCamera> {
                         SizedBox(width: 20),
                         ElevatedButton(
                             onPressed: (){
-                              addCameratoFirebase(cameraIp.text, httpLink.text, nameCamera.text, district.text, username.text, password.text,widget.cameraInforEntity.idOnFirebase);
+                              // addCameratoFirebase(cameraIp.text, httpLink.text, nameCamera.text, district.text, username.text, password.text,widget.cameraInforEntity.idOnFirebase);
                             },
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size(150,40),
@@ -311,14 +309,7 @@ class _InformationCameraState extends State<EditInformationCamera> {
   }
   void addCameratoFirebase(String rtspLink,String httpLink,String nameCamera,String district,String username,String password,String idOnFirebase){
     if(validateNameCamera(nameCamera) & validateCameraIp(rtspLink) & validateDistrict(district) & validateHttpLink(httpLink)){
-      var documentReference = Firestore.instance.collection('cameraIp').document(idOnFirebase);
-      Map<String,dynamic> data ={};
-      data["Ipcamera"] = rtspLink;
-      data["httpLink"] = httpLink;
-      data["namecam"] = nameCamera;
-      data["district"]= district;
       try{
-        documentReference.update(data);
         showSuccessDialog(context, "Chỉnh sửa thành công");
       }catch(e){
         showSuccessDialog(context, "Đã xảy ra lỗi trong quá trình thêm camera. \nVui lòng thử lại");

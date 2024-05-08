@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
 import 'package:news_app_ui/screen/home/home_page.dart';
-import 'package:news_app_ui/screen/list_violation/list_violation_page.dart';
 import 'package:news_app_ui/screen/list_camera//list_camera_page.dart';
 import 'package:news_app_ui/screen/setup/setup_camera_page.dart';
 
@@ -31,11 +30,11 @@ class _MainTabBarState extends State<MainTabBar> {
   final pages = [
     HomePage(),
     SearchPage(),
-    ListViolationPage(),
+    SamplePage(title: "test"),
     SamplePage(
       title: 'Profile Page',
     ),
-    SetUpCameraPage(cameraInforEntity: new CameraInforEntity("", "", "","",""))
+    SetUpCameraPage(cameraInforEntity: CameraInforEntity(" ", " ", " "," "," "," "," ", " ", 0,0,0," ",""))
   ];
 
   @override
@@ -67,7 +66,7 @@ class _MainTabBarState extends State<MainTabBar> {
 
             BottomIconWidget(
               title: '',
-              iconName:  pageIndex == 1 ?  Assets.icons.icSelectedCamera.path: Assets.icons.icUnselectedCamera.path,
+              iconName:  pageIndex == 1 ?  Assets.icons.icSelectedLive.path: Assets.icons.icUnSelectedLive.path,
               iconColor: pageIndex == 1
                   ? Theme.of(context).primaryColor
                   : AppColors.gray,

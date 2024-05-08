@@ -69,6 +69,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_vuesax-linear-send.png
   AssetGenImage get icVuesaxLinearSend =>
       const AssetGenImage('assets/icons/ic_vuesax-linear-send.png');
+  AssetGenImage get icSelectedLive=>const AssetGenImage("assets/icons/ic_selected_live.png");
+
+  AssetGenImage get icUnSelectedLive=>const AssetGenImage("assets/icons/ic_unselected_live.png");
 
   /// List of all assets
   List<AssetGenImage> get values => [
@@ -89,6 +92,8 @@ class $AssetsIconsGen {
         icUnselectedCamera,
         icSelectedListViolation,
         icUnselectedListViolation,
+        icSelectedLive,
+        icUnSelectedLive
       ];
 }
 

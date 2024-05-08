@@ -1,11 +1,8 @@
 import 'dart:collection';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:news_app_ui/dummy_data/cameraInfo.dart';
-
+import '../../dummy_data/cameraInfo.dart';
 import '../image_painter.dart';
-import 'package:firedart/firedart.dart';
+// import 'package:firedart/firedart.dart';
 
 class Controller extends ChangeNotifier {
   late double _strokeWidth;
@@ -84,10 +81,10 @@ class Controller extends ChangeNotifier {
     notifyListeners();
   }
   void getPaintFromFirebase(CameraInforEntity cameraInforEntity){
-    if(cameraInforEntity.painHistory.length >0){
-      _paintHistory.addAll(cameraInforEntity.painHistory);
-
-    }
+    // if(cameraInforEntity.painHistory.length >0){
+    //   _paintHistory.addAll(cameraInforEntity.painHistory);
+    //
+    // }
   }
   void updateFireStoreLine(){
       for(int i =0 ;i<_paintHistory.length;i++){
@@ -119,8 +116,8 @@ class Controller extends ChangeNotifier {
             break;
         }
         try{
-          var documentReference = Firestore.instance.collection('cameraIp').document(idOnFirebase);
-          documentReference.update(value);
+          // var documentReference = Firestore.instance.collection('cameraIp').document(idOnFirebase);
+          // documentReference.update(value);
         }catch(e){
           print(e);
         }
