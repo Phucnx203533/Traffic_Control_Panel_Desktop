@@ -51,6 +51,8 @@ dependencies:
   video_player: ^2.1.11
   flutter_vlc_player: ^7.2.0
   carousel_slider: ^4.2.1
+  url_launcher: ^6.1.12
+  material_design_icons_flutter: ^7.0.7296
 #  awesome_dialog: ^2.2.1
 #  image_painter:
 #    path: /lib/paintOverImageLib/
@@ -60,6 +62,12 @@ dependencies:
   jwt_decoder: ^2.0.1
   pretty_animated_buttons: ^0.0.1
   dynamic_table: ^0.0.1-beta.2
+  animated_custom_dropdown: 1.5.0
+  multi_dropdown: ^2.1.4
+  geolocator: ^11.0.0
+  qr_flutter: ^4.1.0
+  flutter_barcode_scanner: ^2.0.0
+  panara_dialogs: ^0.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

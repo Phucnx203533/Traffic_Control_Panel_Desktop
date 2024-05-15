@@ -1,10 +1,10 @@
 class User {
   String name;
-  DateTime dateOfBirth;
-  String phoneNumber;
+  String password;
   User({
     required this.name,
-    required this.dateOfBirth,
-    required this.phoneNumber,
+    required this.password,
+
   });
+
 }

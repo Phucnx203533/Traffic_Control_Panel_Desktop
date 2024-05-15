@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
 import 'package:news_app_ui/paintOverImageLib/image_painter.dart';
 import 'package:http_auth/http_auth.dart';
@@ -10,12 +9,6 @@ import 'dart:typed_data';
 import 'package:news_app_ui/paintOverImageLib/src/_controller.dart';
 class SetUpCameraPage extends StatefulWidget {
   final CameraInforEntity cameraInforEntity;
-
-  // SetUpCameraPage({
-  //   Key? key,
-  //   CameraInforEntity?cameraInforEntity
-  // }) : super(key: key,cameraInforEntity :cameraInforEntity);
-  // SetUpCameraPage({Key?key,required this.cameraInforEntity}):super(key: key,cameraInforEntity:cameraInforEntity)
   SetUpCameraPage({required this.cameraInforEntity});
 
   @override

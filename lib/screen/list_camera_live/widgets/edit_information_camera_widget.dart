@@ -6,7 +6,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http_auth/http_auth.dart';
 import 'package:news_app_ui/components/my_textfield.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
-import 'package:news_app_ui/screen/list_camera/widgets/list_camera_widgets.dart';
+import 'package:news_app_ui/screen/list_camera_live/widgets/list_camera_live_widgets.dart';
 import 'package:news_app_ui/screen/main_tab_bar/main_tab_bar.dart';
 
 class EditInformationCamera extends StatefulWidget {

@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_ui/api/cameraInforApi.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
-import 'package:news_app_ui/screen/list_camera/widgets/camera_container.dart';
-import 'package:news_app_ui/screen/list_camera/widgets/liveview_camera.dart';
+import 'package:news_app_ui/screen/list_camera_live/widgets/camera_container.dart';
+import 'package:news_app_ui/screen/list_camera_live/widgets/liveview_camera.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ListCamera extends StatefulWidget {
   const ListCamera({super.key});
@@ -34,7 +36,7 @@ class _ListCameraState extends State<ListCamera> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-
+    double ratio = screenWidth/screenHeight;
     return Center(
         child: Container(
             decoration: BoxDecoration(
@@ -153,7 +155,6 @@ class _ListCameraState extends State<ListCamera> {
                           ],
                         );
                       } else {
-                        print(index);
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -180,7 +181,7 @@ class _ListCameraState extends State<ListCamera> {
                               },
                               child: Container(
                                 width:
-                                    screenWidth * 0.4, // Đặt kích thước cho ảnh
+                                    screenWidth * 0.35, // Đặt kích thước cho ảnh
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       20.0), // Đặt BorderRadius cho ảnh

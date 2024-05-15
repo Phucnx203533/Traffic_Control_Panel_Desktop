@@ -26,6 +26,7 @@ class DrawImage extends CustomPainter {
     this.backgroundColor,
   }) : super(repaint: controller) {
     _controller = controller;
+
   }
   @override
   void paint(Canvas canvas, Size size) {
@@ -49,43 +50,12 @@ class DrawImage extends CustomPainter {
       );
     }
     ///paints all the previoud paintInfo history recorded on [PaintHistory]
-    for (final item in _controller.paintHistory) {
-      final _offset = item.offsets;
-      final _painter = item.paint;
-      switch (item.mode) {
-        case PaintMode.rectRedlight:
-          canvas.drawRect(Rect.fromPoints(_offset[0]!, _offset[1]!), _painter);
-          double textFontSize = 28;
-          TextSpan span = TextSpan(
-            style: TextStyle(
-              color: item.color,
-              fontSize: textFontSize,
-            ),
-            text: item.text,
-          );
-          TextPainter tp = TextPainter(
-            text: span,
-            textAlign: TextAlign.left,
-            textDirection: TextDirection.ltr,
-          );
-          tp.layout();
-          // Tính góc nghiêng của đường
-          // Tính vị trí của văn bản dựa trên góc nghiêng
-          Offset textOffset = Offset(
-            _offset[0]!.dx,
-            _offset[0]!.dy-40,
-          );
-          canvas.save();
-          canvas.translate(textOffset.dx, textOffset.dy);
-          tp.paint(canvas, Offset.zero);
-          canvas.restore();
-          break;
-        default:
-          if( _offset[0]!.dx==0 && _offset[0]!.dy == 0 && _offset[1]!.dx==0 && _offset[1]!.dy == 0){
-
-          }
-          else {
-            canvas.drawLine(_offset[0]!, _offset[1]!, _painter);
+      for (final item in _controller.paintHistory) {
+        final _offset = item.offsets;
+        final _painter = item.paint;
+        switch (item.mode) {
+          case PaintMode.rectRedlight:
+            canvas.drawRect(Rect.fromPoints(_offset[0]!, _offset[1]!), _painter);
             double textFontSize = 28;
             TextSpan span = TextSpan(
               style: TextStyle(
@@ -100,33 +70,63 @@ class DrawImage extends CustomPainter {
               textDirection: TextDirection.ltr,
             );
             tp.layout();
-            // Tính góc nghiêng của đường
-            double angle = atan2(_offset[1]!.dy - _offset[0]!.dy,
-                _offset[1]!.dx - _offset[0]!.dx);
-            // Tính vị trí của văn bản dựa trên góc nghiêng
             Offset textOffset = Offset(
               _offset[0]!.dx,
-              _offset[0]!.dy + 4,
+              _offset[0]!.dy-40,
             );
             canvas.save();
             canvas.translate(textOffset.dx, textOffset.dy);
-            canvas.rotate(angle);
             tp.paint(canvas, Offset.zero);
             canvas.restore();
-          }
-          break;
+            break;
+          default:
+            if( _offset[0]!.dx==0 && _offset[0]!.dy == 0 && _offset[1]!.dx==0 && _offset[1]!.dy == 0){
+
+            }
+            else {
+              canvas.drawLine(_offset[0]!, _offset[1]!, _painter);
+              double textFontSize = 28;
+              TextSpan span = TextSpan(
+                style: TextStyle(
+                  color: item.color,
+                  fontSize: textFontSize,
+                ),
+                text: item.text,
+              );
+              TextPainter tp = TextPainter(
+                text: span,
+                textAlign: TextAlign.left,
+                textDirection: TextDirection.ltr,
+              );
+              tp.layout();
+              // Tính góc nghiêng của đường
+              double angle = atan2(_offset[1]!.dy - _offset[0]!.dy,
+                  _offset[1]!.dx - _offset[0]!.dx);
+              Offset textOffset = Offset(
+                _offset[0]!.dx,
+                _offset[0]!.dy + 4,
+              );
+              canvas.save();
+              canvas.translate(textOffset.dx, textOffset.dy);
+              canvas.rotate(angle);
+              tp.paint(canvas, Offset.zero);
+              canvas.restore();
+            }
+            break;
+        }
       }
-    }
+
+
 
     ///Draws ongoing action on the canvas while indrag.
     if (_controller.busy) {
-      final _start = _controller.start;
-      final _end = _controller.end;
-      final _paint = _controller.brush;
-      switch (_controller.mode) {
-        case PaintMode.rectRedlight:
-          canvas.drawRect(Rect.fromPoints(_start!, _end!), _paint);
-          break;
+        final _start = _controller.start;
+        final _end = _controller.end;
+        final _paint = _controller.brush;
+        switch (_controller.mode) {
+          case PaintMode.rectRedlight:
+            canvas.drawRect(Rect.fromPoints(_start!, _end!), _paint);
+            break;
         // case PaintMode.line:
         //   canvas.drawLine(_start!, _end!, _paint);
         //   break;
@@ -159,15 +159,11 @@ class DrawImage extends CustomPainter {
         //     }
         //   }
         //   break;
-        default:
-          for(int i=0;i < _controller.paintHistory.length;i++){
-            if(_controller.paintHistory[i].toString() == _controller.mode.toString()){
-              _controller.paintHistory.remove(_controller.paintHistory[i]);
-              break;
-            }
-          }
-          canvas.drawLine(_start!, _end!, _paint);
-          break;
+          default:
+            canvas.drawLine(_start!, _end!, _paint);
+            break;
+
+
       }
     }
 
@@ -271,6 +267,9 @@ class PaintInfo {
   ///Used to save text in case of text type.
   String text;
 
+  int direct;
+  List<String> attributes;
+
 
   //To determine whether the drawn shape is filled or not.
   bool fill;
@@ -288,6 +287,7 @@ class PaintInfo {
     // }
     return false;
   }
+  bool isLine;
 
   ///In case of string, it is used to save string value entered.
   PaintInfo({
@@ -297,5 +297,21 @@ class PaintInfo {
     required this.strokeWidth,
     this.text = '',
     this.fill = false,
+    this.direct =0,
+    this.attributes = const [],
+    this.isLine = false
   });
+
+  @override
+  String toString() {
+    return 'PaintInfo{mode: $mode, color: $color, strokeWidth: $strokeWidth, offsets: $offsets, text: $text, direct: $direct, attributes: $attributes, fill: $fill}';
+  }
+  dynamic toJson(){
+    List<double> location = offsetToList(offsets);
+    return {"mode": mode.toString(),"name":text ,"location":location,"direct": direct, "attributes": attributes};
+  }
+  List<double> offsetToList(List<Offset?> offsets){
+    List<double> rs = [offsets[0]!.dx,offsets[0]!.dy,offsets[1]!.dx,offsets[1]!.dy];
+    return rs;
+  }
 }

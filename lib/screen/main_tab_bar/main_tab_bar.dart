@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
 import 'package:news_app_ui/screen/home/home_page.dart';
-import 'package:news_app_ui/screen/list_camera//list_camera_page.dart';
+import 'package:news_app_ui/screen/list_camera/list_camera_page.dart';
+import 'package:news_app_ui/screen/list_camera_live///list_camera_live_page.dart';
+import 'package:news_app_ui/screen/profile/profile_page.dart';
 import 'package:news_app_ui/screen/setup/setup_camera_page.dart';
 
 import '../../../gen/assets.gen.dart';
@@ -29,11 +31,9 @@ class _MainTabBarState extends State<MainTabBar> {
   }
   final pages = [
     HomePage(),
-    SearchPage(),
-    SamplePage(title: "test"),
-    SamplePage(
-      title: 'Profile Page',
-    ),
+    ListLiveCameraPage(),
+    ListCameraPage(),
+    ProfilePage(),
     SetUpCameraPage(cameraInforEntity: CameraInforEntity(" ", " ", " "," "," "," "," ", " ", 0,0,0," ",""))
   ];
 

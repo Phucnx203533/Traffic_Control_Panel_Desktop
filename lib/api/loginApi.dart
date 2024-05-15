@@ -1,15 +1,8 @@
 
-
-import 'dart:collection';
-
-import 'package:get/get_connect/http/src/request/request.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:news_app_ui/api/request.dart';
 
 class LoginApi{
   final ApiRequest apiRequest = new ApiRequest();
-
-
 
   Future<Map<String,String>> login(username,password) async{
     try {
@@ -18,7 +11,7 @@ class LoginApi{
           data: {"username": username, "password": password});
       print(res.data['data']);
       // Kiểm tra nếu yêu cầu thành công (status code 200)
-      if (res.statusCode == 200) {
+      if (res.statusCode == 200 && res.data['code'] == "000") {
         final Map<String, dynamic> responseData = res.data;
         final String accessToken = res.data['data']['accessToken'];
         final String refreshToken = res.data['data']['refreshToken'];
@@ -29,7 +22,8 @@ class LoginApi{
         };
         // Trả về thông tin đăng nhập
         return loginInfo;
-      } else {
+      }
+      else{
         // Nếu yêu cầu không thành công, xử lý theo cách phù hợp, ví dụ: ném một ngoại lệ hoặc trả về một giá trị đặc biệt
         throw Exception('Failed to login: ${res.statusCode}');
       }
@@ -46,7 +40,7 @@ class LoginApi{
           data: {"refreshToken": refreshToken});
       print(res.data['data']);
       // Kiểm tra nếu yêu cầu thành công (status code 200)
-      if (res.statusCode == 200) {
+      if (res.statusCode == 200 && res.data['code'] == "000") {
         // Trích xuất thông tin từ phản hồi API
         final Map<String, dynamic> responseData = res.data;
 
@@ -66,10 +60,10 @@ class LoginApi{
         throw Exception('Failed to login: ${res.statusCode}');
       }
     } catch (e) {
-      // Xử lý các ngoại lệ trong quá trình gửi yêu cầu API
       print('Error during login: $e');
-      rethrow; // Chuyển tiếp ngoại lệ để cho phép xử lý tiếp tục ở nơi gọi
+      rethrow;
     }
+
 
   }
 }

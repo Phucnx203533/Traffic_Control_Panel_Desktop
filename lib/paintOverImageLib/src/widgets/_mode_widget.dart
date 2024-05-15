@@ -47,72 +47,19 @@ class SelectionItems extends StatelessWidget {
 }
 
 List<ModeData> paintModes(TextDelegate textDelegate) => [
-      // ModeData(
-      //     icon: Icons.zoom_out_map,
-      //     mode: PaintMode.none,
-      //     label: textDelegate.noneZoom),
       ModeData(
           icon: Icons.horizontal_rule,
-          mode: PaintMode.centerLane,
-          label: textDelegate.centerLane,
-          color: Colors.red),
-      ModeData(
-          icon: Icons.horizontal_rule,
-          mode: PaintMode.rightLane,
-          label: textDelegate.rightLane,
-          color: Colors.blue
-      ),
-      ModeData(
-          icon: Icons.horizontal_rule,
-          mode: PaintMode.leftLane,
-          label: textDelegate.leftLane,
+          mode: PaintMode.line,
+          label: textDelegate.line,
           color: Colors.yellow
       ),
-      ModeData(
-          icon: Icons.horizontal_rule,
-          mode: PaintMode.centerDirect,
-          label: textDelegate.centerDirect,
-          color: Colors.red
-      ),
-      ModeData(
-          icon: Icons.horizontal_rule,
-          mode: PaintMode.rightDirect,
-          label: textDelegate.rightDirect,
-          color: Colors.blue
-      ),
-      ModeData(
-          icon: Icons.horizontal_rule,
-          mode: PaintMode.leftDirect,
-          label: textDelegate.leftDirect,
-          color: Colors.yellow
-      ),
-
       ModeData(
           icon: Icons.crop_free,
           mode: PaintMode.rectRedlight,
           label: textDelegate.recRedlight,
           color: Colors.white
       ),
-      // ModeData(
-      //     icon: Icons.edit,
-      //     mode: PaintMode.freeStyle,
-      //     label: textDelegate.drawing),
-      // ModeData(
-      //     icon: Icons.lens_outlined,
-      //     mode: PaintMode.circle,
-      //     label: textDelegate.circle),
-      // ModeData(
-      //     icon: Icons.arrow_right_alt_outlined,
-      //     mode: PaintMode.arrow,
-      //     label: textDelegate.arrow),
-      // ModeData(
-      //     icon: Icons.power_input,
-      //     mode: PaintMode.dashLine,
-      //     label: textDelegate.dashLine),
-      // ModeData(
-      //     icon: Icons.text_format,
-      //     mode: PaintMode.text,
-      //     label: textDelegate.text),
+
     ];
 
 @immutable

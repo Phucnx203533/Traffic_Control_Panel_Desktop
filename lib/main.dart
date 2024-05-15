@@ -13,12 +13,9 @@ import 'package:news_app_ui/utils/constants/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-// const apiKey = 'AIzaSyAGEyO4ZN7gdrvuqY4Vd1SMMCUVmt6UDno';
-// const projectId = 'aaaa-dbb41';
-// const email = 'phuc202@gmail.com';
-// const password = '123456';
+
 final startup = false;
-final User user = new User(name: "admin", dateOfBirth: DateTime.timestamp(), phoneNumber: "0123456789");
+final User user = new User(name: "", password:"");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Necessary initialization for package:media_kit.
@@ -58,19 +55,6 @@ class MyApp extends StatelessWidget {
       }
 
     }
-    // GetMaterialApp getXApp = GetMaterialApp(
-    //   themeMode: ThemeMode.light,
-    //   debugShowCheckedModeBanner: false,
-    //   theme: ThemeData(
-    //       primaryColor: AppColors.primaryColor
-    //   ),
-    //   // home: MainTabBar(),
-    //   home:
-    //   AuthPage(),
-    //   // initialBinding: AppBinding(),
-    // );
-    //
-    // return getXApp;
     return FutureBuilder<bool>(
       future: checkAccessToken(),
       builder: (context, snapshot) {

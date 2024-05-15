@@ -1,30 +1,38 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app_ui/screen/list_camera//widgets/list_camera_widgets.dart';
-import 'package:news_app_ui/screen/list_camera/widgets/search_header_widget.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:news_app_ui/screen/list_camera/widgets/list_camera_widget.dart';
 import 'package:news_app_ui/utils/constants/app_colors.dart';
+import 'package:news_app_ui/utils/utils.dart';
 import 'package:news_app_ui/widgets/spacer/spacer_custom.dart';
 
-class SearchPage extends StatefulWidget {
-  SearchPage({
-    Key? key,
-  }) : super(key: key);
+class ListCameraPage extends StatefulWidget {
+  const ListCameraPage({super.key});
 
   @override
-  _SearchPageState createState() => _SearchPageState();
+  State<ListCameraPage> createState() => _ListCameraPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
+class _ListCameraPageState extends State<ListCameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: SearchHeaderWidget(),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Danh sách Camera',
+                style: SafeGoogleFont(
+                  'Mulish',
+                  fontSize: 24,
+                  // fontWeight: FontWeight.w100,
+                  // height: 1,
+                  color: HexColor("#8d8d8d"),
+                ),
+              ),
+            ],
+          ),
           elevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false),

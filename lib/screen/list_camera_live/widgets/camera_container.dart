@@ -49,10 +49,10 @@ class _CameraContainerState extends State<CameraContainer> {
         children: [
           dataImage == null
               ? Container(
-            width: screenWidth*0.4, // Đặt kích thước cho ảnh
+            width: screenWidth*0.35, // Đặt kích thước cho ảnh
                   decoration: BoxDecoration(
                     borderRadius:
-                        BorderRadius.circular(30.0), // Đặt BorderRadius cho ảnh
+                        BorderRadius.circular(10.0), // Đặt BorderRadius cho ảnh
                     image: DecorationImage(
                       image: AssetImage("assets/images/image-alt.jpg"),
                       fit: BoxFit.scaleDown, // Đảm bảo ảnh không bị vỡ
@@ -60,10 +60,10 @@ class _CameraContainerState extends State<CameraContainer> {
                   ),
                 )
               : Container(
-            width: screenWidth*0.4,// Đặt kích thước cho ảnh
+            width: screenWidth*0.35,// Đặt kích thước cho ảnh
                   decoration: BoxDecoration(
                     borderRadius:
-                        BorderRadius.circular(30.0), // Đặt BorderRadius cho ảnh
+                        BorderRadius.circular(10.0), // Đặt BorderRadius cho ảnh
                     image: DecorationImage(
                       image: MemoryImage(dataImage),
                       fit: BoxFit.scaleDown, // Đảm bảo ảnh không bị vỡ
@@ -71,7 +71,7 @@ class _CameraContainerState extends State<CameraContainer> {
                   ),
                 ),
           Positioned(
-            bottom: 5,
+            bottom: screenHeight>screenWidth?screenWidth*0.05:screenHeight*0.05,
             // left: screenWidth*0.1, // Điều chỉnh vị trí ngang của văn bản
             child: Text(
               'Camera@' + widget.cameraInforEntity.id,

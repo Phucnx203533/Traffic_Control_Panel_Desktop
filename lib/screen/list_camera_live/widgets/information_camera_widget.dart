@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:news_app_ui/dummy_data/cameraInfo.dart';
-import 'package:news_app_ui/screen/list_camera/widgets/edit_information_camera_widget.dart';
+import 'package:news_app_ui/screen/list_camera_live/widgets/edit_information_camera_widget.dart';
 
 class InformationCamera extends StatefulWidget {
   final CameraInforEntity cameraInforEntity;

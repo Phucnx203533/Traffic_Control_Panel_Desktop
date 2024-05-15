@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:news_app_ui/utils/utils.dart';
 
 
@@ -11,16 +12,16 @@ class SearchHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           'Danh sách Camera Live',
           style: SafeGoogleFont(
             'Mulish',
-            fontSize: 32,
+            fontSize: 24,
             // fontWeight: FontWeight.w100,
             // height: 1,
-            color: Color(0xff1a434e),
+            color: HexColor("#8d8d8d"),
           ),
         ),
       ],

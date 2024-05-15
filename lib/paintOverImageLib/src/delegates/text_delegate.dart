@@ -1,5 +1,6 @@
 class TextDelegate {
   final String noneZoom = "None / Zoom";
+  final String line = "Làn đường";
   final String centerLane = "Làn giữa";
   final String rightLane ="Làn phải";
   final String leftLane = "Làn trái";

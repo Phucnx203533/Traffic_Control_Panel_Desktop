@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import '../../dummy_data/cameraInfo.dart';
 import '../image_painter.dart';
@@ -13,7 +12,7 @@ class Controller extends ChangeNotifier {
 
   final List<Offset?> _offsets = [];
 
-  final List<PaintInfo> _paintHistory = [];
+  List<PaintInfo> _paintHistory = [];
   late String _idOnFirebase;
   Offset? _start, _end;
 
@@ -47,6 +46,15 @@ class Controller extends ChangeNotifier {
   Offset? get end => _end;
 
 
+  set mode(PaintMode value) {
+    _mode = value;
+  }
+
+
+  set paintHistory(List<PaintInfo> value) {
+    _paintHistory = value;
+  }
+
   bool get onTextUpdateMode =>
       _mode == PaintMode.text &&
       _paintHistory
@@ -56,7 +64,7 @@ class Controller extends ChangeNotifier {
   Controller({
     double strokeWidth = 2.0,
     Color color = Colors.red,
-    PaintMode mode = PaintMode.line,
+    PaintMode mode = PaintMode.none,
     String text = '',
     bool fill = false,
     String idOnFirebase ='',
@@ -71,12 +79,6 @@ class Controller extends ChangeNotifier {
 
 
   void addPaintInfo(PaintInfo paintInfo) {
-    for(int i=0;i < _paintHistory.length;i++){
-        if(_paintHistory[i].mode == paintInfo.mode){
-          _paintHistory.remove(_paintHistory[i]);
-          break;
-        }
-    }
     _paintHistory.add(paintInfo);
     notifyListeners();
   }
@@ -85,44 +87,6 @@ class Controller extends ChangeNotifier {
     //   _paintHistory.addAll(cameraInforEntity.painHistory);
     //
     // }
-  }
-  void updateFireStoreLine(){
-      for(int i =0 ;i<_paintHistory.length;i++){
-        HashMap<String,List<dynamic>> value = new HashMap();
-        switch(paintHistory[i].mode){
-          case PaintMode.centerLane:
-            value.putIfAbsent("point_center_lane",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.rightDirect:
-            value.putIfAbsent("point_right_lane",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.leftLane:
-            value.putIfAbsent("point_left_lane",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.centerDirect:
-            value.putIfAbsent("point_center_direct",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.rightDirect:
-            value.putIfAbsent("point_right_direct",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.leftDirect:
-            value.putIfAbsent("point_left_direct",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.rightDirect:
-            value.putIfAbsent("point_right_direct",()=>addOffsetToList(_paintHistory[i]));
-            break;
-          case PaintMode.rectRedlight:
-            value.putIfAbsent("point_rect_lane",()=>addOffsetToList(_paintHistory[i]));
-            break;
-        }
-        try{
-          // var documentReference = Firestore.instance.collection('cameraIp').document(idOnFirebase);
-          // documentReference.update(value);
-        }catch(e){
-          print(e);
-        }
-
-      }
   }
   List<dynamic> addOffsetToList(PaintInfo paintInfo){
       List<dynamic> list = [];

@@ -28,13 +28,14 @@ class _LoginBodyScreenState extends State<LoginBodyScreen> {
     try {
       if(validate(emailController.text,passwordController.text)){
           final SharedPreferences prefs = await _prefs;
-          user.name = "Test";
           Map<String, String> result = new HashMap();
           result =
           await loginApi.login(emailController.text, passwordController.text);
           result.forEach((key, value) {
             prefs.setString(key, value);
           });
+          user.name = emailController.text;
+          user.password = passwordController.text;
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => MainTabBar(0)));
       }
