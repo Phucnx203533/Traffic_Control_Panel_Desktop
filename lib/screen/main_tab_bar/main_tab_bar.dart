@@ -3,6 +3,7 @@ import 'package:news_app_ui/dummy_data/cameraInfo.dart';
 import 'package:news_app_ui/screen/home/home_page.dart';
 import 'package:news_app_ui/screen/list_camera/list_camera_page.dart';
 import 'package:news_app_ui/screen/list_camera_live///list_camera_live_page.dart';
+import 'package:news_app_ui/screen/list_violation/list_violation_page.dart';
 import 'package:news_app_ui/screen/profile/profile_page.dart';
 import 'package:news_app_ui/screen/setup/setup_camera_page.dart';
 
@@ -33,8 +34,9 @@ class _MainTabBarState extends State<MainTabBar> {
     HomePage(),
     ListLiveCameraPage(),
     ListCameraPage(),
+    ListViolationPage(),
     ProfilePage(),
-    SetUpCameraPage(cameraInforEntity: CameraInforEntity(" ", " ", " "," "," "," "," ", " ", 0,0,0," ",""))
+
   ];
 
   @override
@@ -79,7 +81,7 @@ class _MainTabBarState extends State<MainTabBar> {
 
             BottomIconWidget(
               title: '',
-              iconName:  pageIndex == 2 ?  Assets.icons.icSelectedListViolation.path: Assets.icons.icUnselectedListViolation.path,
+              iconName:  pageIndex == 2 ?  Assets.icons.icSelectedCamera.path: Assets.icons.icUnselectedCamera.path,
               iconColor: pageIndex == 2
                   ? Theme.of(context).primaryColor
                   : AppColors.gray,
@@ -93,13 +95,25 @@ class _MainTabBarState extends State<MainTabBar> {
 
             BottomIconWidget(
               title: '',
-              iconName:  pageIndex == 3 ?  Assets.icons.icSelectedUser.path: Assets.icons.icUnselectedUser.path,
+              iconName:  pageIndex == 3 ?  Assets.icons.icSelectedListViolation.path: Assets.icons.icUnselectedListViolation.path,
               iconColor: pageIndex == 3
                   ? Theme.of(context).primaryColor
                   : AppColors.gray,
               tap: () {
                 setState(() {
                   pageIndex = 3;
+                });
+              },
+            ),
+            BottomIconWidget(
+              title: '',
+              iconName:  pageIndex == 4 ?  Assets.icons.icSelectedUser.path: Assets.icons.icUnselectedUser.path,
+              iconColor: pageIndex == 4
+                  ? Theme.of(context).primaryColor
+                  : AppColors.gray,
+              tap: () {
+                setState(() {
+                  pageIndex = 4;
                 });
               },
             ),

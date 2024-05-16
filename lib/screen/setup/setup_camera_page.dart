@@ -42,6 +42,11 @@ class _SetUpCameraPageState extends State<SetUpCameraPage> {
     super.initState();
     fetchImage();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

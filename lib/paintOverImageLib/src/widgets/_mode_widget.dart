@@ -54,7 +54,7 @@ List<ModeData> paintModes(TextDelegate textDelegate) => [
           color: Colors.yellow
       ),
       ModeData(
-          icon: Icons.crop_free,
+          icon: Icons.traffic_outlined,
           mode: PaintMode.rectRedlight,
           label: textDelegate.recRedlight,
           color: Colors.white

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io' show File;
 import 'dart:ui' as ui;
-
+import 'dart:math' as math;
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -371,26 +371,43 @@ class ImagePainterState extends State<ImagePainter> {
   late TextDelegate textDelegate;
   CameraInforApi request = CameraInforApi();
 
-  Future<void> getRuleConfig()async{
-    Map<String,dynamic> res = await request.getRuleConfig(widget.cameraInforEntity.id);
+  Future<void> getRuleConfig() async {
+    Map<String, dynamic> res =
+        await request.getRuleConfig(widget.cameraInforEntity.id);
     List<PaintInfo> tmp = [];
-    if(res['code'] =="000"){
-      List<dynamic> listTrafficLightConfig = res['data']['trafficLightEntities'];
+    if (res['code'] == "000") {
+      List<dynamic> listTrafficLightConfig =
+          res['data']['trafficLightEntities'];
       listTrafficLightConfig.forEach((element) {
-            PaintInfo info = PaintInfo(mode: PaintMode.rectRedlight,
-                offsets: [Offset(element['location'][0], element['location'][1]),Offset(element['location'][2], element['location'][3])],
-                color: Colors.white, strokeWidth:2.0 );
-            info.text = element['name'];
-            tmp.add(info);
-
+        PaintInfo info = PaintInfo(
+            mode: PaintMode.rectRedlight,
+            offsets: [
+              Offset(element['location'][0], element['location'][1]),
+              Offset(element['location'][2], element['location'][3])
+            ],
+            color: Colors.white,
+            strokeWidth: 2.0);
+        info.text = element['name'];
+        tmp.add(info);
       });
       List<dynamic> listLineConfig = res['data']['lineEntities'];
       listLineConfig.forEach((element) {
-        PaintInfo info = PaintInfo(mode: PaintMode.line,
-            offsets: [Offset(element['location'][0], element['location'][1]),Offset(element['location'][2], element['location'][3])],
-            color: Colors.yellow, strokeWidth:2.0 );
-            info.text = element['name'];
-            tmp.add(info);
+        PaintInfo info = PaintInfo(
+            mode: PaintMode.line,
+            offsets: [
+              Offset(element['location'][0], element['location'][1]),
+              Offset(element['location'][2], element['location'][3])
+            ],
+            color: Colors.yellow,
+            strokeWidth: 2.0);
+        info.text = element['name'];
+
+        List<String> tmp_attribute = [];
+        for (var item in element['attributes']) {
+          tmp_attribute.add(item.toString());
+        }
+        info.attributes = tmp_attribute;
+        tmp.add(info);
       });
       setState(() {
         _controller.paintHistory = tmp;
@@ -398,10 +415,11 @@ class ImagePainterState extends State<ImagePainter> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
-    list =[];
+    list = [];
     _isLoaded = ValueNotifier<bool>(false);
     _controller = Controller();
     // _controller.getPaintFromFirebase(widget.cameraInforEntity);
@@ -420,8 +438,6 @@ class ImagePainterState extends State<ImagePainter> {
     }
     getRuleConfig();
     _resolveAndConvertImage();
-
-
 
     _textController = TextEditingController();
     _transformationController = TransformationController();
@@ -535,193 +551,243 @@ class ImagePainterState extends State<ImagePainter> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double screenHeight = screenSize.height;
-    return
-      OrientationBuilder(builder: (context, orientation) {
-        return Center(
-          child: SizedBox(
-            height: screenHeight,
-            width: screenWidth,
-            child: orientation == Orientation.portrait
-                ?   Container(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                child:  Column(
+    return OrientationBuilder(builder: (context, orientation) {
+      return Center(
+        child: SizedBox(
+          height: screenHeight,
+          width: screenWidth,
+          child: orientation == Orientation.portrait
+              ? Container(
+                  height: double.maxFinite,
+                  width: double.maxFinite,
+                  child: Column(
                     children: [
-                      if (widget.controlsAtTop && widget.showControls) _buildControls(),
+                      if (widget.controlsAtTop && widget.showControls)
+                        _buildControls(),
                       FittedBox(
-                          alignment: FractionalOffset.center,
-                          child: ClipRect(
-                            child: AnimatedBuilder(
-                              animation: _controller,
-                              builder: (context, child) {
-                                return InteractiveViewer(
-                                  transformationController: _transformationController,
-                                  panEnabled: _controller.mode == PaintMode.none,
-                                  scaleEnabled: false,
-                                  onInteractionUpdate: _scaleUpdateGesture,
-                                  onInteractionEnd: _scaleEndGesture,
-                                  child: CustomPaint(
-                                    size: imageSize,
-                                    willChange: true,
-                                    isComplex: true,
-                                    painter: DrawImage(
-                                      image: _image,
-                                      controller: _controller,
-                                    ),
+                        alignment: FractionalOffset.center,
+                        child: ClipRect(
+                          child: AnimatedBuilder(
+                            animation: _controller,
+                            builder: (context, child) {
+                              return InteractiveViewer(
+                                transformationController:
+                                    _transformationController,
+                                panEnabled: _controller.mode == PaintMode.none,
+                                scaleEnabled: false,
+                                onInteractionUpdate: _scaleUpdateGesture,
+                                onInteractionEnd: _scaleEndGesture,
+                                child: CustomPaint(
+                                  size: imageSize,
+                                  willChange: true,
+                                  isComplex: true,
+                                  painter: DrawImage(
+                                    image: _image,
+                                    controller: _controller,
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       SingleChildScrollView(
-                        child:  Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child:  Container(
+                        child: Container(
                             width: screenWidth,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        color: Colors.black, // Màu của border
-                                        width: 1, // Độ dày của border
-                                      ),
-                                    ),
-                                    child:GestureDetector(
-                                      onTap: (){
-                                        _editPaintHistory(_controller.paintHistory[index]);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 2,),
-                                          Text(list[index].text),
-                                          Spacer(),
-                                          TextButton(onPressed: (){
-                                            setState(() {
-                                              list.remove(list[index]);
-                                            });
-                                          }, child: Icon(Icons.delete,color: Colors.black,)),
-
-
-                                        ],
-                                      ),
-                                    )
-                                );
-                              },
-                            ),
-                          ),
-                        )
+                            child: Column(
+                              children: [
+                                Text("Danh sách đường kẻ vẽ"),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemCount: list.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: EdgeInsets.fromLTRB(5, 3, 5, 3),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                              color: Colors
+                                                  .black, // Màu của border
+                                              width: 1, // Độ dày của border
+                                            ),
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              _editPaintHistory(_controller
+                                                  .paintHistory[index]);
+                                            },
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                if(list[index].mode ==PaintMode.line)
+                                                  Icon(Icons.horizontal_rule),
+                                                if(list[index].mode !=PaintMode.line)
+                                                  Icon(Icons.traffic_outlined),
+                                                Text(list[index].text),
+                                                Spacer(),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      setState(() {
+                                                        list.remove(
+                                                            list[index]);
+                                                      });
+                                                      _controller.paintHistory
+                                                          .remove(_controller
+                                                                  .paintHistory[
+                                                              index]);
+                                                    },
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.black,
+                                                    )),
+                                              ],
+                                            ),
+                                          )),
+                                    );
+                                  },
+                                ),
+                              ],
+                            )),
                       ),
                       // if (!widget.controlsAtTop && widget.showControls) _buildControls(),
                       SizedBox(height: MediaQuery.of(context).padding.bottom)
                     ],
-
-                )
-            )
-                :   Container(
-                height: screenHeight,
-                width: screenWidth,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if (widget.controlsAtTop && widget.showControls) _buildControls(),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              alignment: FractionalOffset.center,
-                              child: ClipRect(
-                                child: AnimatedBuilder(
-                                  animation: _controller,
-                                  builder: (context, child) {
-                                    return InteractiveViewer(
-                                      transformationController: _transformationController,
-                                      // maxScale: 2.4,
-                                      // minScale: 1,
-                                      panEnabled: _controller.mode == PaintMode.none,
-                                      // scaleEnabled: widget.isScalable!,
-                                      scaleEnabled: false,
-                                      onInteractionUpdate: _scaleUpdateGesture,
-                                      onInteractionEnd: _scaleEndGesture,
-                                      child: CustomPaint(
-                                        size: imageSize,
-                                        willChange: true,
-                                        isComplex: true,
-                                        painter: DrawImage(
-                                          image: _image,
-                                          controller: _controller,
+                  ))
+              : Container(
+                  height: screenHeight,
+                  width: screenWidth,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        if (widget.controlsAtTop && widget.showControls)
+                          _buildControls(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FittedBox(
+                                alignment: FractionalOffset.center,
+                                child: ClipRect(
+                                  child: AnimatedBuilder(
+                                    animation: _controller,
+                                    builder: (context, child) {
+                                      return InteractiveViewer(
+                                        transformationController:
+                                            _transformationController,
+                                        // maxScale: 2.4,
+                                        // minScale: 1,
+                                        panEnabled:
+                                            _controller.mode == PaintMode.none,
+                                        // scaleEnabled: widget.isScalable!,
+                                        scaleEnabled: false,
+                                        onInteractionUpdate:
+                                            _scaleUpdateGesture,
+                                        onInteractionEnd: _scaleEndGesture,
+                                        child: CustomPaint(
+                                          size: imageSize,
+                                          willChange: true,
+                                          isComplex: true,
+                                          painter: DrawImage(
+                                            image: _image,
+                                            controller: _controller,
+                                          ),
                                         ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Container(
+                                  width: screenWidth * 0.2,
+                                  child: Column(
+                                    children: [
+                                      Text("Danh sách đường kẻ vẽ"),
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
+                                        itemCount: list.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(5, 3, 5, 3),
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: Border.all(
+                                                    color: Colors
+                                                        .black, // Màu của border
+                                                    width:
+                                                        1, // Độ dày của border
+                                                  ),
+                                                ),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    _editPaintHistory(
+                                                        _controller
+                                                                .paintHistory[
+                                                            index]);
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 2,
+                                                      ),
+                                                      if(list[index].mode ==PaintMode.line)
+                                                        Icon(Icons.horizontal_rule),
+                                                      if(list[index].mode !=PaintMode.line)
+                                                        Icon(Icons.traffic_outlined),
+                                                      Text(list[index].text),
+                                                      Spacer(),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            setState(() {
+                                                              list.remove(
+                                                                  list[index]);
+                                                            });
+                                                            _controller
+                                                                .paintHistory
+                                                                .remove(_controller
+                                                                        .paintHistory[
+                                                                    index]);
+                                                          },
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.black,
+                                                          )),
+                                                    ],
+                                                  ),
+                                                )),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                    ],
+                                  )),
                             ),
-                          ),
-                          SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child:  Container(
-                                width: screenWidth*0.2,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  itemCount: list.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return  Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(5),
-                                          border: Border.all(
-                                            color: Colors.black, // Màu của border
-                                            width: 1, // Độ dày của border
-                                          ),
-                                        ),
-                                        child:GestureDetector(
-                                          onTap: (){
-                                            _editPaintHistory(_controller.paintHistory[index]);
-                                          },
-                                          child: Row(
-                                            children: [
-                                              SizedBox(width: 2,),
-                                              Text(list[index].text),
-                                              Spacer(),
-                                              TextButton(onPressed: (){
-                                                setState(() {
-                                                  list.remove(list[index]);
-                                                  _controller.paintHistory.remove(_controller.paintHistory[index]);
-                                                });
-                                              }, child: Icon(Icons.delete,color: Colors.black,)),
-                                            ],
-                                          ),
-                                        )
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
+                          ],
+                        )
 
-                        ],
-                      )
-
-
-
-                      // if (!widget.controlsAtTop && widget.showControls) _buildControls(),
-                      // SizedBox(height: MediaQuery.of(context).padding.bottom)
-                    ],
-                  ),
-                )
-            ),
-          ),
-        );
-      }
-
+                        // if (!widget.controlsAtTop && widget.showControls) _buildControls(),
+                        // SizedBox(height: MediaQuery.of(context).padding.bottom)
+                      ],
+                    ),
+                  )),
+        ),
       );
+    });
   }
 
   Widget _paintSignature() {
@@ -968,6 +1034,7 @@ class ImagePainterState extends State<ImagePainter> {
         await _convertedImage.toByteData(format: ui.ImageByteFormat.png);
     return byteData?.buffer.asUint8List();
   }
+
   void _editPaintHistory(PaintInfo info) {
     final nameLineController = TextEditingController();
     final directController = MultiSelectController<ValueItem>();
@@ -977,27 +1044,48 @@ class ImagePainterState extends State<ImagePainter> {
     bool isValidateDirect = false;
     bool isValidateType = false;
     bool isValidated = true;
-    print(info);
+    double tanx = (info.offsets[0]!.dy-info.offsets[1]!.dy).abs()/(info.offsets[0]!.dx-info.offsets[1]!.dx).abs();
+    bool isHorizontal = tanx<math.tan(30*(math.pi/180));
     final List<ValueItem<ValueItem<dynamic>>> directlist = [
-      ValueItem(label: 'Từ trái qua phải', value: ValueItem(label: 'Từ trái qua phải', value: -1)),
-      ValueItem(label: 'Từ dưới lên', value: ValueItem(label: 'Từ dưới lên', value: -2)),
-      ValueItem(label: 'Hai chiều', value: ValueItem(label: 'Hai chiều', value: 0)),
-      ValueItem(label: 'Từ phải qua trái', value: ValueItem(label: 'Từ phải qua trái', value: 1)),
-      ValueItem(label: 'Từ trên xuống', value: ValueItem(label: 'Từ trên xuống', value: 2)),
+
+      isHorizontal?ValueItem(
+          label: 'Từ dưới lên',
+          value: ValueItem(label: 'Từ dưới lên', value: -2)):ValueItem(
+          label: 'Từ trái qua phải',
+          value: ValueItem(label: 'Từ trái qua phải', value: -1)),
+      ValueItem(
+          label: 'Hai chiều', value: ValueItem(label: 'Hai chiều', value: 0)),
+
+      isHorizontal?ValueItem(
+          label: 'Từ trên xuống',
+          value: ValueItem(label: 'Từ trên xuống', value: 2)):ValueItem(
+          label: 'Từ phải qua trái',
+          value: ValueItem(label: 'Từ phải qua trái', value: 1)),
     ];
 
-    final List<ValueItem<ValueItem<dynamic>>> typeList =[
-      ValueItem(label: 'Người đi bộ', value: ValueItem(label: 'Người đi bộ', value: "person")),
-      ValueItem(label: 'Xe đạp', value: ValueItem(label: 'Xe đạp', value: "bicycle")),
+    final List<ValueItem<ValueItem<dynamic>>> typeList = [
+      ValueItem(
+          label: 'Người đi bộ',
+          value: ValueItem(label: 'Người đi bộ', value: "person")),
+      ValueItem(
+          label: 'Xe đạp', value: ValueItem(label: 'Xe đạp', value: "bicycle")),
       ValueItem(label: 'Ô tô', value: ValueItem(label: 'Ô tô', value: "car")),
-      ValueItem(label: 'Xe máy', value: ValueItem(label: 'Xe máy', value: "motorcycle")),
-      ValueItem(label: 'Xe buýt', value: ValueItem(label: 'Xe buýt', value: "bus")),
-      ValueItem(label: 'Xe tải', value: ValueItem(label: 'Xe tải', value: "truck")),
+      ValueItem(
+          label: 'Xe máy',
+          value: ValueItem(label: 'Xe máy', value: "motorcycle")),
+      ValueItem(
+          label: 'Xe buýt', value: ValueItem(label: 'Xe buýt', value: "bus")),
+      ValueItem(
+          label: 'Xe tải', value: ValueItem(label: 'Xe tải', value: "truck")),
     ];
     directController.setOptions(directlist);
     typeTrafficController.setOptions(typeList);
-    directController.setSelectedOptions(directlist.where((element) =>element.value!.value == info.direct).toList());
-    typeTrafficController.setSelectedOptions(typeList.where((element) =>info.attributes.contains(element.value!.value)).toList());
+    directController.setSelectedOptions(directlist
+        .where((element) => element.value!.value == info.direct)
+        .toList());
+    typeTrafficController.setSelectedOptions(typeList
+        .where((element) => info.attributes.contains(element.value!.value))
+        .toList());
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1005,7 +1093,9 @@ class ImagePainterState extends State<ImagePainter> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Cài đặt làn đường'),
+              title: Text(info.mode == PaintMode.line
+                  ? 'Cài đặt làn đường'
+                  : 'Cài đặt đèn giao thông'),
               content: SingleChildScrollView(
                 child: Wrap(
                   children: [
@@ -1016,15 +1106,21 @@ class ImagePainterState extends State<ImagePainter> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Tên làn đường"),
+                            Text(info.mode == PaintMode.line
+                                ? 'Cài đặt làn đường'
+                                : "Cài đặt đèn giao thông"),
                             SizedBox(height: 2),
                             TextField(
                               controller: nameLineController,
                               decoration: InputDecoration(
-                                hintText: "Nhập tên làn",
+                                hintText: info.mode== PaintMode.line
+                                    ? "Nhập tên làn"
+                                    : "Nhập tên đèn",
                                 border: OutlineInputBorder(),
                                 errorText: isValidateName
-                                    ? "Tên làn đường không được để trống"
+                                    ? info.mode == PaintMode.line
+                                        ? "Tên làn đường không được để trống"
+                                        : "Tên đèn không được để trống"
                                     : null,
                               ),
                               onChanged: (value) {
@@ -1038,187 +1134,7 @@ class ImagePainterState extends State<ImagePainter> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Hướng di chuyển của phương tiện"),
-                            SizedBox(height: 2),
-                            MultiSelectDropDown(
-                              onOptionSelected:
-                                  (List<ValueItem> selectedOptions) {
-                                setState(() {
-                                  info.direct = selectedOptions.isEmpty
-                                      ? 0
-                                      : selectedOptions[0].value.value;
-                                  isValidateDirect = selectedOptions.isEmpty;
-                                });
-                              },
-                              options:directlist,
-                              hint: "Lựa chọn chiều đi được cho phép",
-                              selectionType: SelectionType.single,
-                              chipConfig:
-                              const ChipConfig(wrapType: WrapType.wrap),
-                              dropdownHeight: 200,
-                              controller: directController,
-                              optionTextStyle: const TextStyle(fontSize: 16),
-                              selectedOptionIcon:
-                              const Icon(Icons.check_circle),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            if (isValidateDirect)
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Hướng đi phương tiện không được để trống",
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 12),
-                                  )
-                                ],
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Loại phương tiện được phép đi"),
-                            SizedBox(height: 2),
-                            MultiSelectDropDown<ValueItem<dynamic>>(
-                              onOptionSelected: (List<ValueItem<dynamic>> selectedOptions) {
-                                setState(() {
-                                  List<String> tmp_att = [];
-                                  selectedOptions.forEach((element) {
-                                    tmp_att.add(element.value.value);
-                                  });
-                                  info.attributes = tmp_att;
-                                  isValidateType = selectedOptions.isEmpty;
-                                });
-                              },
-                              options: typeList,
-                              controller: typeTrafficController,
-                              hint: "Lựa chọn các loại phương tiện được cho phép",
-                              selectionType: SelectionType.multi,
-                              chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                              dropdownHeight: 300,
-                              optionTextStyle: const TextStyle(fontSize: 16),
-                              selectedOptionIcon: const Icon(Icons.check_circle),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            if (isValidateType)
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Phương tiện cho phép không được để trống",
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 12),
-                                  )
-                                ],
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: Text('Ok'),
-                  onPressed: () {
-                    setState(() {
-                      isValidateName = nameLineController.text.isEmpty;
-                      isValidateDirect =
-                          directController.selectedOptions.isEmpty;
-                      isValidateType =
-                          typeTrafficController.selectedOptions.isEmpty;
-                      isValidated = !isValidateName &&
-                          !isValidateDirect &&
-                          !isValidateType;
-                      // list.add(info);
-
-                    });
-                    if(isValidated){
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-  void _addPaintHistory(PaintInfo info) {
-    final nameLineController = TextEditingController();
-    final directController = MultiSelectController<ValueItem>();
-    final typeTrafficController = MultiSelectController<ValueItem>();
-
-    bool isValidateName = false;
-    bool isValidateDirect = false;
-    bool isValidateType = false;
-    bool isValidated = true;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text( _controller.mode==PaintMode.line?'Cài đặt làn đường':"Cài đặt đèn giao thông"),
-              content: SingleChildScrollView(
-                child: Wrap(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Tên làn đường"),
-                            SizedBox(height: 2),
-                            TextField(
-                              controller: nameLineController,
-                              decoration: InputDecoration(
-                                hintText: _controller.mode==PaintMode.line?"Nhập tên làn":"Nhập tên đèn giao thông",
-                                border: OutlineInputBorder(),
-                                errorText: isValidateName
-                                    ? "Tên làn đường không được để trống"
-                                    : null,
-                              ),
-                              onChanged: (value) {
-                                info.text = value;
-                                setState(() {
-                                  isValidateName = value.isEmpty;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if(_controller.mode == PaintMode.line)
+                    if (info.mode == PaintMode.line)
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: Padding(
@@ -1238,13 +1154,7 @@ class ImagePainterState extends State<ImagePainter> {
                                     isValidateDirect = selectedOptions.isEmpty;
                                   });
                                 },
-                                options:const <ValueItem<ValueItem<dynamic>>>[
-                                  ValueItem(label: 'Từ trái qua phải', value: ValueItem(label: 'Từ trái qua phải', value: -1)),
-                                  ValueItem(label: 'Từ dưới lên', value: ValueItem(label: 'Từ dưới lên', value: -1)),
-                                  ValueItem(label: 'Hai chiều', value: ValueItem(label: 'Hai chiều', value: 0)),
-                                  ValueItem(label: 'Từ phải qua trái', value: ValueItem(label: 'Từ phải qua trái', value: 1)),
-                                  ValueItem(label: 'Từ trên xuống', value: ValueItem(label: 'Từ trên xuống', value: 1)),
-                                ],
+                                options: directlist,
                                 hint: "Lựa chọn chiều đi được cho phép",
                                 selectionType: SelectionType.single,
                                 chipConfig:
@@ -1275,64 +1185,60 @@ class ImagePainterState extends State<ImagePainter> {
                           ),
                         ),
                       ),
-                    if(_controller.mode == PaintMode.line)
+                    if (info.mode == PaintMode.line)
                       SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Loại phương tiện được phép đi"),
-                            SizedBox(height: 2),
-                            MultiSelectDropDown<ValueItem<dynamic>>(
-                              onOptionSelected: (List<ValueItem<dynamic>> selectedOptions) {
-                                setState(() {
-                                  List<String> tmp_att = [];
-                                  selectedOptions.forEach((element) {
-                                    tmp_att.add(element.value.value);
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Loại phương tiện được phép đi"),
+                              SizedBox(height: 2),
+                              MultiSelectDropDown<ValueItem<dynamic>>(
+                                onOptionSelected:
+                                    (List<ValueItem<dynamic>> selectedOptions) {
+                                  setState(() {
+                                    List<String> tmp_att = [];
+                                    selectedOptions.forEach((element) {
+                                      tmp_att.add(element.value.value);
+                                    });
+                                    info.attributes = tmp_att;
+                                    isValidateType = selectedOptions.isEmpty;
                                   });
-                                  info.attributes = tmp_att;
-                                  isValidateType = selectedOptions.isEmpty;
-                                });
-                              },
-                              options: const <ValueItem<ValueItem<dynamic>>>[
-                                ValueItem(label: 'Người đi bộ', value: ValueItem(label: 'Người đi bộ', value: "person")),
-                                ValueItem(label: 'Xe đạp', value: ValueItem(label: 'Xe đạp', value: "bicycle")),
-                                ValueItem(label: 'Ô tô', value: ValueItem(label: 'Ô tô', value: "car")),
-                                ValueItem(label: 'Xe máy', value: ValueItem(label: 'Xe máy', value: "motorcycle")),
-                                ValueItem(label: 'Xe buýt', value: ValueItem(label: 'Xe buýt', value: "bus")),
-                                ValueItem(label: 'Xe tải', value: ValueItem(label: 'Xe tải', value: "truck")),
-                              ],
-                              controller: typeTrafficController,
-                              hint: "Lựa chọn các loại phương tiện được cho phép",
-                              selectionType: SelectionType.multi,
-                              chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                              dropdownHeight: 300,
-                              optionTextStyle: const TextStyle(fontSize: 16),
-                              selectedOptionIcon: const Icon(Icons.check_circle),
-                            ),
-
-                            SizedBox(
-                              height: 5,
-                            ),
-                            if (isValidateType)
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Phương tiện cho phép không được để trống",
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 12),
-                                  )
-                                ],
-                              )
-                          ],
+                                },
+                                options: typeList,
+                                controller: typeTrafficController,
+                                hint:
+                                    "Lựa chọn các loại phương tiện được cho phép",
+                                selectionType: SelectionType.multi,
+                                chipConfig:
+                                    const ChipConfig(wrapType: WrapType.wrap),
+                                dropdownHeight: 300,
+                                optionTextStyle: const TextStyle(fontSize: 16),
+                                selectedOptionIcon:
+                                    const Icon(Icons.check_circle),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              if (isValidateType)
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Phương tiện cho phép không được để trống",
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 12),
+                                    )
+                                  ],
+                                )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -1342,26 +1248,264 @@ class ImagePainterState extends State<ImagePainter> {
                   onPressed: () {
                     setState(() {
                       isValidateName = nameLineController.text.isEmpty;
-                      if(_controller.mode == PaintMode.line){
+                      if (info.mode == PaintMode.line) {
+                        isValidateDirect =
+                            directController.selectedOptions.isEmpty;
+                        isValidateType =
+                            typeTrafficController.selectedOptions.isEmpty;
+                        isValidated = !isValidateName &&
+                            !isValidateDirect &&
+                            !isValidateType;
+                      }else{
+                        isValidated = !isValidateName;
+                      }
+                    });
+                    if (isValidated) {
+                      Navigator.of(context).pop();
+                      // _controller.addPaintInfo(info);
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _addPaintHistory(PaintInfo info) {
+    final nameLineController = TextEditingController();
+    final directController = MultiSelectController<ValueItem>();
+    final typeTrafficController = MultiSelectController<ValueItem>();
+
+    bool isValidateName = false;
+    bool isValidateDirect = false;
+    bool isValidateType = false;
+    bool isValidated = true;
+    double tanx = (info.offsets[0]!.dy-info.offsets[1]!.dy).abs()/(info.offsets[0]!.dx-info.offsets[1]!.dx).abs();
+    bool isHorizontal = tanx<math.tan(30*(math.pi/180));
+    final List<ValueItem<ValueItem<dynamic>>> directlist = [
+
+      isHorizontal?ValueItem(
+          label: 'Từ dưới lên',
+          value: ValueItem(label: 'Từ dưới lên', value: -2)):ValueItem(
+          label: 'Từ trái qua phải',
+          value: ValueItem(label: 'Từ trái qua phải', value: -1)),
+      ValueItem(
+          label: 'Hai chiều', value: ValueItem(label: 'Hai chiều', value: 0)),
+
+      isHorizontal?ValueItem(
+          label: 'Từ trên xuống',
+          value: ValueItem(label: 'Từ trên xuống', value: 2)):ValueItem(
+          label: 'Từ phải qua trái',
+          value: ValueItem(label: 'Từ phải qua trái', value: 1)),
+    ];
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(_controller.mode == PaintMode.line
+                  ? 'Cài đặt làn đường'
+                  : "Cài đặt đèn giao thông"),
+              content: SingleChildScrollView(
+                child: Wrap(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Tên làn đường"),
+                            SizedBox(height: 2),
+                            TextField(
+                              controller: nameLineController,
+                              decoration: InputDecoration(
+                                hintText: _controller.mode == PaintMode.line
+                                    ? "Nhập tên làn"
+                                    : "Nhập tên đèn giao thông",
+                                border: OutlineInputBorder(),
+                                errorText: isValidateName
+                                    ? _controller.mode == PaintMode.line
+                                        ? "Tên làn đường không được để trống"
+                                        : "Tên đèn không được để trống"
+                                    : null,
+                              ),
+                              onChanged: (value) {
+                                info.text = value;
+                                setState(() {
+                                  isValidateName = value.isEmpty;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (_controller.mode == PaintMode.line)
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Hướng di chuyển của phương tiện"),
+                              SizedBox(height: 2),
+                              MultiSelectDropDown(
+                                onOptionSelected:
+                                    (List<ValueItem> selectedOptions) {
+                                  setState(() {
+                                    info.direct = selectedOptions.isEmpty
+                                        ? 0
+                                        : selectedOptions[0].value.value;
+                                    isValidateDirect = selectedOptions.isEmpty;
+                                  });
+                                },
+                                options: directlist,
+                                hint: "Lựa chọn chiều đi được cho phép",
+                                selectionType: SelectionType.single,
+                                chipConfig:
+                                    const ChipConfig(wrapType: WrapType.wrap),
+                                dropdownHeight: 200,
+                                controller: directController,
+                                optionTextStyle: const TextStyle(fontSize: 16),
+                                selectedOptionIcon:
+                                    const Icon(Icons.check_circle),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              if (isValidateDirect)
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Hướng đi phương tiện không được để trống",
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 12),
+                                    )
+                                  ],
+                                )
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (_controller.mode == PaintMode.line)
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Loại phương tiện được phép đi"),
+                              SizedBox(height: 2),
+                              MultiSelectDropDown<ValueItem<dynamic>>(
+                                onOptionSelected:
+                                    (List<ValueItem<dynamic>> selectedOptions) {
+                                  setState(() {
+                                    List<String> tmp_att = [];
+                                    selectedOptions.forEach((element) {
+                                      tmp_att.add(element.value.value);
+                                    });
+                                    info.attributes = tmp_att;
+                                    isValidateType = selectedOptions.isEmpty;
+                                  });
+                                },
+                                options: const <ValueItem<ValueItem<dynamic>>>[
+                                  ValueItem(
+                                      label: 'Người đi bộ',
+                                      value: ValueItem(
+                                          label: 'Người đi bộ',
+                                          value: "person")),
+                                  ValueItem(
+                                      label: 'Xe đạp',
+                                      value: ValueItem(
+                                          label: 'Xe đạp', value: "bicycle")),
+                                  ValueItem(
+                                      label: 'Ô tô',
+                                      value: ValueItem(
+                                          label: 'Ô tô', value: "car")),
+                                  ValueItem(
+                                      label: 'Xe máy',
+                                      value: ValueItem(
+                                          label: 'Xe máy',
+                                          value: "motorcycle")),
+                                  ValueItem(
+                                      label: 'Xe buýt',
+                                      value: ValueItem(
+                                          label: 'Xe buýt', value: "bus")),
+                                  ValueItem(
+                                      label: 'Xe tải',
+                                      value: ValueItem(
+                                          label: 'Xe tải', value: "truck")),
+                                ],
+                                controller: typeTrafficController,
+                                hint:
+                                    "Lựa chọn các loại phương tiện được cho phép",
+                                selectionType: SelectionType.multi,
+                                chipConfig:
+                                    const ChipConfig(wrapType: WrapType.wrap),
+                                dropdownHeight: 300,
+                                optionTextStyle: const TextStyle(fontSize: 16),
+                                selectedOptionIcon:
+                                    const Icon(Icons.check_circle),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              if (isValidateType)
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Phương tiện cho phép không được để trống",
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 12),
+                                    )
+                                  ],
+                                )
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    setState(() {
+                      isValidateName = nameLineController.text.isEmpty;
+                      if (_controller.mode == PaintMode.line) {
                         isValidateDirect =
                             directController.selectedOptions.isEmpty;
                         isValidateType =
                             typeTrafficController.selectedOptions.isEmpty;
                         info.isLine = true;
+                        isValidated = !isValidateName &&
+                            !isValidateDirect &&
+                            !isValidateType;
+                      }else{
+                        info.isLine = false;
+                        isValidated = !isValidateName;
                       }
-                      isValidated = !isValidateName &&
-                          !isValidateDirect &&
-                          !isValidateType;
-                      // list.add(info);
-
                     });
-                    if(isValidated){
+                    if (isValidated) {
                       Navigator.of(context).pop();
                       _controller.addPaintInfo(info);
                     }
-
-
-
                   },
                 ),
               ],
@@ -1429,9 +1573,9 @@ class ImagePainterState extends State<ImagePainter> {
             tooltip: textDelegate.saveLineEdit,
             icon: Icon(Icons.save),
             onPressed: () async {
-              Map<String,dynamic> result = await request.createRule(list.toSet().toList(),widget.cameraInforEntity.id);
-              if(result['isSuccess']){
-
+              Map<String, dynamic> result = await request.createRule(
+                  list.toSet().toList(), widget.cameraInforEntity.id);
+              if (result['isSuccess']) {
                 PanaraInfoDialog.show(
                   context,
                   title: "Thông báo",
@@ -1441,9 +1585,10 @@ class ImagePainterState extends State<ImagePainter> {
                     Navigator.pop(context);
                   },
                   panaraDialogType: PanaraDialogType.success,
-                  barrierDismissible: false, // optional parameter (default is true)
+                  barrierDismissible:
+                      false, // optional parameter (default is true)
                 );
-              }else{
+              } else {
                 PanaraInfoDialog.show(
                   context,
                   title: "Lỗi",
@@ -1453,7 +1598,8 @@ class ImagePainterState extends State<ImagePainter> {
                     Navigator.pop(context);
                   },
                   panaraDialogType: PanaraDialogType.error,
-                  barrierDismissible: false, // optional parameter (default is true)
+                  barrierDismissible:
+                      false, // optional parameter (default is true)
                 );
               }
             },
@@ -1467,7 +1613,6 @@ class ImagePainterState extends State<ImagePainter> {
               setState(() {
                 list.clear();
               });
-
             },
           ),
         ],

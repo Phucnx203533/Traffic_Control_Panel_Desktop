@@ -1,8 +1,4 @@
-
-
-
 import 'dart:convert';
-
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
