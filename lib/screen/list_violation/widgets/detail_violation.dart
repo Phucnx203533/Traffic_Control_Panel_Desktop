@@ -148,21 +148,25 @@ class _DetailViolationState extends State<DetailViolation> {
                 SizedBox(
                   width: 20,
                 ),
-                Container(
-                    width: screenWidth * 0.4,
-                    child: Column(
-                      children: [
-                        Text("Hình ảnh biển số xe"),
-                        dataImageLicenseplate.length > 0
-                            ? Image.memory(
-                                Uint8List.fromList(dataImageLicenseplate),
-                                fit: BoxFit.scaleDown,
-                              )
-                            : const CircularProgressIndicator()
-                      ],
-                    )),
+
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+                width: screenWidth * 0.4,
+                child: Column(
+                  children: [
+                    Text("Hình ảnh biển số xe"),
+                    dataImageLicenseplate.length > 0
+                        ? Image.memory(
+                      Uint8List.fromList(dataImageLicenseplate),
+                      fit: BoxFit.scaleDown,
+                    )
+                        : const CircularProgressIndicator()
+                  ],
+                )),
             SizedBox(
               height: 20,
             ),

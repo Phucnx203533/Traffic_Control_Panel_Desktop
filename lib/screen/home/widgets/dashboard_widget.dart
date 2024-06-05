@@ -59,7 +59,7 @@ class Dashboard extends StatelessWidget {
                     ),);
                 },
                 child: ServiceBox(
-                  title: "Danh sách camera",
+                  title: "Camera",
                   icon: Assets.icons.icUnselectedCamera.path,
                   bgColor: Colors.pinkAccent,
                 ),

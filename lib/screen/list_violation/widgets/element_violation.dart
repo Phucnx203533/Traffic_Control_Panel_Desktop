@@ -35,36 +35,42 @@ class ElementViolation extends StatelessWidget {
               color: Color.fromRGBO(218, 218, 218, 1.0)
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(width: 10,),
               Image.asset("assets/icons/ic_cctv.png",scale: 20,),
               SizedBox(width: 10,),
-              Text("Lỗi vi phạm: ${violation.violation}",
-                style: SafeGoogleFont(
-                  'Mulish',
-                  fontSize: 16,
-                  // fontWeight: FontWeight.w100,
-                  // height: 1,
-                  color: HexColor("#ffffff"),
-                ),),
-              SizedBox(width: 10,),
-              Text("Biển số xe: ${violation.licenseplate}",
-                style: SafeGoogleFont(
-                  'Mulish',
-                  fontSize: 16,
-                  // fontWeight: FontWeight.w100,
-                  // height: 1,
-                  color: HexColor("#ffffff"),
-                ),),
-              SizedBox(width: 10,),
-              Text("Thời gian: ${formatTime(violation.timeViolation)}",
-                style: SafeGoogleFont(
-                  'Mulish',
-                  fontSize: 16,
-                  // fontWeight: FontWeight.w100,
-                  // height: 1,
-                  color: HexColor("#ffffff"),
-                ),)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Lỗi vi phạm: ${violation.violation}",
+                    style: SafeGoogleFont(
+                      'Mulish',
+                      fontSize: 12,
+                      // fontWeight: FontWeight.w100,
+                      // height: 1,
+                      color: HexColor("#ffffff"),
+                    ),),
+                  Text("Biển số xe: ${violation.licenseplate}",
+                    style: SafeGoogleFont(
+                      'Mulish',
+                      fontSize: 12,
+                      // fontWeight: FontWeight.w100,
+                      // height: 1,
+                      color: HexColor("#ffffff"),
+                    ),),
+                  Text("Thời gian: ${formatTime(violation.timeViolation)}",
+                    style: SafeGoogleFont(
+                      'Mulish',
+                      fontSize: 12,
+                      // fontWeight: FontWeight.w100,
+                      // height: 1,
+                      color: HexColor("#ffffff"),
+                    ),)
+                ],
+              )
+
             ],
           ),
         ),
